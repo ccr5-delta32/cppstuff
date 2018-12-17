@@ -18,7 +18,7 @@ DelimTxtIO::DelimTxtIO(const std::string &file) {
     std::cout << "detected gzipped file" << std::endl;
     isZipped = true;
     decompressor.push(boost::iostreams::gzip_decompressor());
-    decompressor.push(this->fileStream);
+    decompressor.push(fileStream);
   } else {
     // assume plain text, cout for testing
     std::cout << "detected uncompressed file" << std::endl;
@@ -29,12 +29,12 @@ DelimTxtIO::DelimTxtIO(std::ifstream &iStream, bool zipped) {
   // Used when providing an externally instantiated ifstream
   isZipped = false;
   lineCnt = 0;
-  swap(this->fileStream, iStream);
+  swap(fileStream, iStream);
 
   if (zipped) {
     isZipped = true;
     decompressor.push(boost::iostreams::gzip_decompressor());
-    decompressor.push(this->fileStream);
+    decompressor.push(fileStream);
   }
 }
 
