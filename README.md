@@ -7,7 +7,7 @@ use as such:
 
 ```
 int main(int argc, char** argv) {
-  CmdOpt opt(argc, argv, "a-b:c+d\*");
+  CmdOpt opt(argc, argv, "a-b:c+d*");
   // get the arguments like this:
   opt.chkOpt('a'); // returns a bool indicating if the opt was present
   opt.getArg('b', n); // where n = int, returns the nth argument as string
@@ -20,7 +20,7 @@ optstring:
 (-) - No arguments allowed. Any argument will be ignored.   
 (:) - Exactly 1 argument must be provided. Additional arguments will be ignored.   
 (+) - A minimum of 1 argument and up to the maximum value of int arguments.  
-(*) - A minimum of 0 arguments and up to the maximum value of int arguments.  
+(\*) - A minimum of 0 arguments and up to the maximum value of int arguments.  
 
 The optstring must follow the pattern of opt,token,opt,token...
 
