@@ -3,36 +3,36 @@
 #include "vcfio.h"
 
 VCFio::VCFio(const std::string fileName) {
-  this->assFile = fileName;
-  this->readAssFile();
+  assFile = fileName;
+  readAssFile();
 }
 
 void VCFio::setAssFile(const std::string fileName) {
-  this->assFile = fileName;
+  assFile = fileName;
 }
 
 void VCFio::readAssFile() {
-  DelimTxtIO vcfReader(this->assFile);
+  DelimTxtIO vcfReader(assFile);
   std::string line;
   while(vcfReader.getLine(line)) {
     if (line.substr(0, 2) == "##") {
-      this->comments.push_back(line);
+      comments.push_back(line);
       continue;
     }
     // Put header line in header
     if (line[0] == '#') {
-      this->header = line;
+      header = line;
       break;
     }
   }
 
   std::vector<std::string> vcfline;
   while(vcfReader.getLine(vcfline)) {
-    this->vcf.push_back(vcfline);
+    vcf.push_back(vcfline);
   }
 
   std::cout << vcfReader.getCnt() << " lines read from the VCF, of which " <<
-               vcfReader.getCnt()-this->comments.size()-1 <<
+               vcfReader.getCnt()-comments.size()-1 <<
                " are data" << std::endl;
 }
 
@@ -46,20 +46,20 @@ void VCFio::printVec(const std::vector<std::string> &v) {
 
 void VCFio::printComments() {
   std::cout << "The comment lines in the VCF:" << std::endl;
-  for (int  i = 0; i != (int)this->comments.size(); i++) {
-    std::cout << this->comments[i] << std::endl;
+  for (int  i = 0; i != (int)comments.size(); i++) {
+    std::cout << comments[i] << std::endl;
   }
 }
 
 void VCFio::printHeader() {
-  std::cout << "The header of the VCF data:\n" << this->header << std::endl;
+  std::cout << "The header of the VCF data:\n" << header << std::endl;
 }
 
 int VCFio::printVcf(int n/*= 0*/) {
   std::cout << "\nPrinting some VCF data:" << std::endl;
-  for (int  i = 0; i != int(this->vcf.size()); i++) {
+  for (int  i = 0; i != int(vcf.size()); i++) {
     if (n == 0 || i < n ) {
-      printVec(this->vcf[i]);
+      printVec(vcf[i]);
       continue;
     }
   }
