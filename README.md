@@ -5,6 +5,7 @@
 Can play the role of optarg from unistd.h. Include only the optargs.h header and
 use as such:
 
+```
 int main(int argc, char** argv) {
   CmdOpt opt(argc, argv, "a-b:c+d\*");
   // get the arguments like this:
@@ -13,7 +14,7 @@ int main(int argc, char** argv) {
   opt.getArg('c'); // returns a reference to a vector of strings containing all
                   // arguments
 }
-
+```
 optstring:
 
 (-) - No arguments allowed.
@@ -28,3 +29,8 @@ The optstring must follow the pattern of opt,token,opt,token...
 Can read text files, that maybe gzipped, and this will be automatically
 detected. Required boost::iostreams for gzipped files.
 
+## vcfio
+
+Uses the above to read (yes, only the i out of io so far) a vcf file
+
+```g++ -std=c++11 -lboost_iostreams delimtxtio.cpp cmdopt.cpp optargs.cpp vcfio.cpp vcfio.test.main.cpp -o vcfio.test```
