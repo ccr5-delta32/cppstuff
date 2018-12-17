@@ -33,4 +33,12 @@ detected. Required boost::iostreams for gzipped files.
 
 Uses the above to read (yes, only the i out of io so far) a vcf file
 
-```g++ -std=c++11 -lboost_iostreams delimtxtio.cpp cmdopt.cpp optargs.cpp vcfio.cpp vcfio.test.main.cpp -o vcfio.test```
+```
+g++ -std=c++11 -lboost_iostreams delimtxtio.cpp cmdopt.cpp optargs.cpp vcfio.cpp vcfio.test.main.cpp -o vcfio.test
+```
+
+And then:
+
+```
+vcfio.test -v <vcf.file>
+```
