@@ -17,10 +17,10 @@ int main(int argc, char** argv) {
 ```
 optstring:
 
-(-) - No arguments allowed.
-(:) - Exactly 1 argument must be provided
-(+) - A minimum of 1 argument and up to the maximum value of int arguments
-(*) - A minimum of 0 arguments and up to the maximum value of int arguments
+(-) - No arguments allowed. Any argument will be ignored.   
+(:) - Exactly 1 argument must be provided. Additional arguments will be ignored.   
+(+) - A minimum of 1 argument and up to the maximum value of int arguments.  
+(*) - A minimum of 0 arguments and up to the maximum value of int arguments.  
 
 The optstring must follow the pattern of opt,token,opt,token...
 
