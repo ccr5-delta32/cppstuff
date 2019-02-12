@@ -42,3 +42,32 @@ And then:
 ```
 vcfio.test -v <vcf.file>
 ```
+
+## pathcontent
+Can be used to get all files with a certain extension in a certain path
+Example:
+
+```
+#include "cppstuff/pathcontent.h"
+#include "cppstuff/optargs.h"
+
+int main(int argc, char** argv) {
+  CmdOpt opt(argc, argv, "p:e:");
+  FilesWithExtInPath pcont(opt.getArg('p', 0), opt.getArg('e', 0));
+  for (const auto& tmp : pcont.getContent()) {
+    std::cout << tmp << std::endl;
+  }
+}
+```
+
+compile:
+
+```
+g++ -std=c++11 -l boost_system -l boost_filesystem pathcontent.cpp cmdopt.cpp optargs.cpp main.cpp -o testpath
+```
+
+And then:
+
+```
+testpath -p some_path -e .ext
+```
