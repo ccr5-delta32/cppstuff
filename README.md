@@ -45,11 +45,13 @@ vcfio.test -v <vcf.file>
 
 ## pathcontent
 Can be used to get all files with a certain extension in a certain path
+
 Example:
 
 ```
 #include "cppstuff/pathcontent.h"
 #include "cppstuff/optargs.h"
+#include <iostream>
 
 int main(int argc, char** argv) {
   CmdOpt opt(argc, argv, "p:e:");
