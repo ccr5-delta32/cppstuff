@@ -35,6 +35,6 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
                " were found in " << path << std::endl;
 }
 
-std::vector<fs::path>& FilesWithExtInPath::getContent() {
+std::vector<fs::path> FilesWithExtInPath::getContent() const {
   return content;
 }

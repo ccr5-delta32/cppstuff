@@ -8,7 +8,7 @@ class FilesWithExtInPath {
   
   public:
     FilesWithExtInPath(const fs::path& path, const std::string& ext);
-    std::vector<fs::path>& getContent();
+    std::vector<fs::path> getContent() const;
 
   private:
     std::vector<fs::path> content; 
