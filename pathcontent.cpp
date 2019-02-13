@@ -22,8 +22,13 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
   fs::directory_iterator it(path);
 
   while (it != end) {
-    if(fs::is_regular_file(*it) && it->path().extension() == ext) {
-      std::cout << *it << " has extension: " << it->path().extension() << std::endl;
+    const fs::directory_entry de = *it;
+    if(fs::is_regular_file(de) &&
+       de.path().string().substr(de.path().string().length()-ext.length()) == ext) {
+      std::cout << *it << " has extension: " << it->path().extension() <<
+                   " but I captured " <<
+                   de.path().string().substr(de.path().string().length()-ext.length()) <<
+                   std::endl;
       content.push_back(*it);
     }
     ++it;
