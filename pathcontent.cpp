@@ -20,7 +20,6 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
 
   fs::directory_iterator end;
   fs::directory_iterator it(path);
-  int cnt = 0;
 
   while (it != end) {
     const fs::directory_entry de = *it;
@@ -37,4 +36,8 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
 
 std::vector<fs::path> FilesWithExtInPath::getContent() const {
   return content;
+}
+
+int FilesWithExtInPath::getCnt() const {
+  return cnt;
 }
