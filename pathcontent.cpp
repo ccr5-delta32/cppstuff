@@ -3,11 +3,10 @@
 
 FilesWithExtInPath::FilesWithExtInPath(const fs::path& path,
                                        const std::string& ext) {
-  sniffPath(path, ext, content);
+  sniffPath(path, ext);
 }
 
-void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
-                                   std::vector<fs::path>& content) {
+void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext) {
   if(!fs::exists(path)) {
     std::cout << "The path " << path << " does not exist!" << std::endl;
     exit(EXIT_FAILURE);
