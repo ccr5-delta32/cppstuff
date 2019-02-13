@@ -20,19 +20,19 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext,
 
   fs::directory_iterator end;
   fs::directory_iterator it(path);
+  int cnt = 0;
 
   while (it != end) {
     const fs::directory_entry de = *it;
     if(fs::is_regular_file(de) &&
        de.path().string().substr(de.path().string().length()-ext.length()) == ext) {
-      std::cout << *it << " has extension: " << it->path().extension() <<
-                   " but I captured " <<
-                   de.path().string().substr(de.path().string().length()-ext.length()) <<
-                   std::endl;
       content.push_back(*it);
+      cnt++;
     }
     ++it;
   }
+  std::cout << cnt << " files with extension " << ext <<
+               " were found in " << path << std::endl;
 }
 
 std::vector<fs::path>& FilesWithExtInPath::getContent() {
