@@ -10,7 +10,7 @@ CmdOpt::CmdOpt(int &argc, char** argv, std::string optstring) {
   bool wasopt = false;
   for (int i = 1; i < (int)cmdline.size(); i++) {
     if (argv[i][0] == '-') {
-      if (!chkOpt(argv[i][1])) {
+      if (!chkOptstringOpts(argv[i][1])) {
         std::cout << "Unexpected option " << argv[i] << " and its args will be ignored!" << std::endl;
         wasopt = false;
         continue;
@@ -49,13 +49,22 @@ char CmdOpt::getOptToken(char opt) {
       return tmp.second;
     }
   }
-  std::cout << "getOptToken: no option -" << opt << " provided in optstring" << std::endl;
+  std::cerr << "getOptToken: no option -" << opt << " provided in optstring" << std::endl;
   exit(EXIT_FAILURE);
 }
 
-bool CmdOpt::chkOpt(char opt) {
+bool CmdOpt::chkOptstringOpts(char opt) {
   for (const std::pair<char, char>& tmp : optstringOpts) {
     if (tmp.first == opt) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool CmdOpt::chkOpt(char opt) const {
+  for (const OptArgs& tmp : optargbox) {
+    if (tmp.getOpt() == opt) {
       return true;
     }
   }
@@ -66,7 +75,7 @@ bool CmdOpt::chkOptValidity() const {
   bool nogood = false;
   for (const OptArgs &tmp : optargbox) {
     if (tmp.nargs < tmp.minargs) {
-      std::cerr << "Error! Option -" << tmp.opt << "must have at least " << tmp.minargs <<
+      std::cerr << "Error! Option -" << tmp.opt << " must have at least " << tmp.minargs <<
                    " arguments but it has only " << tmp.nargs << std::endl;
       nogood = true;
     }

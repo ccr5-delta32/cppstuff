@@ -15,26 +15,36 @@
 #include <fstream>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <sstream>
+
+namespace bio = boost::iostreams;
 
 class DelimTxtIO {
 
   public:
-    DelimTxtIO(const std::string &file);
-    DelimTxtIO(std::ifstream &iStream, bool zipped=false);
+    DelimTxtIO(const std::string &file, std::string mode="r", bool zipped=false);
+    DelimTxtIO(std::fstream &Stream, bool zipped=false);
     bool getLine(/*out*/std::string &lineData);
     bool getLine(/*out*/std::vector<std::string> &lineData,
                  /*in*/char delim = '\t');
     bool getField(/*out*/std::string &lineData, /*in*/int field,
                  char delim='\t');
     void splitLine(std::vector<std::string> &lineData, char delim='\t');
+    void putLine(std::string& oline);
     void incCnt();
     unsigned int getCnt();
+    std::string pline();
+    void close();
 
   private:
-    boost::iostreams::filtering_stream<boost::iostreams::input> decompressor;
-    std::ifstream fileStream;
-    std::ifstream* pfileStream = &fileStream;
+    bio::filtering_stream<bio::input> decompressor;
+    bio::filtering_ostream compressor;
+    std::stringstream oStream;
+    std::fstream fileStream;
+    std::fstream* pfileStream = &fileStream;
     bool isZipped;
     unsigned int lineCnt = 0;
     std::string line;
+    std::string filename = "undefined_filename";
 };

@@ -14,6 +14,10 @@ OptArgs::OptArgs(char opt, CmdOpt& cmdopt) {
       minargs = 1;
       maxargs = 1;
       break;
+    case '|':
+      minargs = 0;
+      maxargs = 1;
+      break;
     case '+':
       minargs = 1;
       maxargs = std::numeric_limits<int>::max();

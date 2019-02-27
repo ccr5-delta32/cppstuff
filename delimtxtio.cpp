@@ -1,39 +1,66 @@
 #include "delimtxtio.h"
 #include <iostream>
-#include <sstream>
+#include <boost/iostreams/device/file.hpp>
 
-DelimTxtIO::DelimTxtIO(const std::string &file) {
-  isZipped = false;
+namespace bio = boost::iostreams;
+
+DelimTxtIO::DelimTxtIO(const std::string &file, std::string mode, bool zipped) {
+  // mode: w - write; r - read; wr - write/read
+  isZipped = zipped;
   lineCnt = 0;
-  fileStream.open(file.c_str(), std::ifstream::in);
-
-  // Look at first two bytes to see if file is gzipped
-  std::ifstream tmp(file.c_str(), std::ios_base::binary | std::ios_base::in);
-  char bytes[2];
-  tmp.read(bytes, 2);
-  tmp.close();
-
-  if (bytes[0] == (char)0x1f && bytes[1] == (char)0x8b) {
-    // looks like gzipped file, cout for testing
-    std::cout << "detected gzipped file" << std::endl;
-    isZipped = true;
-    decompressor.push(boost::iostreams::gzip_decompressor());
-    decompressor.push(fileStream);
+  filename = file;
+  if (mode == "r") {
+    std::cout << "Opening " << filename << " for reading" << std::endl;
+    fileStream.open(file.c_str(), std::ios::in);
+  } else if (mode == "w") {
+    if (isZipped) {
+      if (filename.substr(filename.size()-3) != ".gz") {
+        filename = filename + ".gz";
+      }
+      std::cout << "Opening " << filename << " for writing gzipped data" << std::endl;
+      fileStream.open(filename.c_str(), std::ios::out | std::ios::binary);
+      compressor.push(bio::gzip_compressor(bio::gzip_params(bio::gzip::best_compression)));
+      compressor.push(bio::file_sink(filename));
+    } else {
+      std::cout << "Opening " << filename << " for writing plain data" << std::endl;
+      fileStream.open(file.c_str(), std::ios::out);
+    }
+  } else if (mode == "wr") {
+    std::cout << "Opening " << file << " for reading/writing" << std::endl;
+    fileStream.open(file.c_str(), std::ios::in | std::ios::out);
   } else {
-    // assume plain text, cout for testing
-    std::cout << "detected uncompressed file" << std::endl;
+    throw "DelimTxtIO::DelimTxtIO - Attempt to open file in unexpected mode(s)";
+  }
+
+  // If reading, look at first two bytes to see if file is gzipped
+  if (mode == "r") {
+    std::fstream tmp(file.c_str(), std::ios_base::binary | std::ios_base::in);
+    char bytes[2];
+    tmp.read(bytes, 2);
+    tmp.close();
+
+    if (bytes[0] == (char)0x1f && bytes[1] == (char)0x8b) {
+      // looks like gzipped file, cout for testing
+      std::cout << "detected gzipped file" << std::endl;
+      isZipped = true;
+      decompressor.push(bio::gzip_decompressor());
+      decompressor.push(fileStream);
+    } else {
+      // assume plain text, cout for testing
+      std::cout << "detected uncompressed file" << std::endl;
+    }
   }
 }
 
-DelimTxtIO::DelimTxtIO(std::ifstream &iStream, bool zipped) {
-  // Used when providing an externally instantiated ifstream
+DelimTxtIO::DelimTxtIO(std::fstream &Stream, bool zipped) {
+  // Used when providing an externally instantiated fstream
   isZipped = false;
   lineCnt = 0;
-  swap(fileStream, iStream);
+  swap(fileStream, Stream);
 
   if (zipped) {
     isZipped = true;
-    decompressor.push(boost::iostreams::gzip_decompressor());
+    decompressor.push(bio::gzip_decompressor());
     decompressor.push(fileStream);
   }
 }
@@ -98,6 +125,29 @@ bool DelimTxtIO::getField(std::string &lineData, int field,
       return true;
     }
   }
-  std::cout << "Warning: Could not retrieve field " << field << std::endl;
+  std::cerr << "Warning: Could not retrieve field " << field << std::endl;
   return false;
+}
+
+void DelimTxtIO::putLine(std::string& oline) {
+  try {
+    if (isZipped) {
+      if (oline.back() != '\n') {
+        oline += '\n';
+      }
+      compressor.write(oline.c_str(), oline.size());
+    } else {
+      fileStream << oline << (oline.back() == '\n' ? : '\n');
+    }
+  } catch (std::exception& e) {
+    throw "An exception occurred while writing " + filename + ": " + e.what();
+  }
+}
+
+std::string DelimTxtIO::pline() {
+  return line;
+}
+
+void DelimTxtIO::close() {
+  fileStream.close();
 }

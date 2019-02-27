@@ -8,7 +8,7 @@ class CmdOpt {
 
   public:
     CmdOpt(int& argc, char** argv, std::string optstring);
-    bool chkOpt(char opt);
+    bool chkOpt(char opt) const;
     void print_args();
     const std::string& getArg(char opt, int i) const;
     const std::vector<std::string>& getArg(char opt) const;
@@ -22,4 +22,5 @@ class CmdOpt {
     std::map<char, char> optstringOpts;
     void processOptstring(std::string optstring);
     std::vector<OptArgs> optargbox;
+    bool chkOptstringOpts(char opt);
 };

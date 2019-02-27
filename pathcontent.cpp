@@ -1,12 +1,16 @@
 #include "pathcontent.h"
 #include <iostream>
 
+FilesWithExtInPath::FilesWithExtInPath(){}
+
 FilesWithExtInPath::FilesWithExtInPath(const fs::path& path,
                                        const std::string& ext) {
+  extension = ext;
   sniffPath(path, ext);
 }
 
 void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext) {
+  extension = ext;
   if(!fs::exists(path)) {
     std::cout << "The path " << path << " does not exist!" << std::endl;
     exit(EXIT_FAILURE);
@@ -22,8 +26,8 @@ void FilesWithExtInPath::sniffPath(const fs::path& path, const std::string& ext)
 
   while (it != end) {
     const fs::directory_entry de = *it;
-    if(fs::is_regular_file(de) &&
-       de.path().string().substr(de.path().string().length()-ext.length()) == ext) {
+    if(fs::is_regular_file(de) && (ext.empty() || 
+       de.path().string().substr(de.path().string().length()-ext.length()) == ext)) {
       content.push_back(*it);
       cnt++;
     }
