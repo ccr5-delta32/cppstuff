@@ -114,21 +114,21 @@ A collection of convenience functions:
 Util util;
 ```
 
-# printVec
+### printVec
 outputs an arbitrary number of elements of a vector to std::cout, starting from the first. Default is all elements!
 
 ```
 util.printVec(somevector, 25); // prints first 25 elements
 ```
 
-# printMapKeys
+### printMapKeys
 outputs an arbitrary number of map (eg. std::map or std::unordered_map) keys to std::cout
 
 ```
 util.printMapKeys(somemap, 10); // prints first 10 keys (defaul=25). 
 ```
 
-# has
+### has
 tests if an element occurs in a vector
 
 ```
@@ -137,7 +137,7 @@ util.has(chk, 3); // returns true
 util.has(chk, 6); // returns false
 ```
 
-# getIndx
+### getIndx
 return the index of the first instance found of some element in a vector
 
 ```
@@ -146,7 +146,7 @@ util.getIndx(chk, 3); // returns 2
 // returns -1 if the element is not found in the vector
 ```
 
-# vec2str
+### vec2str
 Makes a string out of all the elements in a vector separated with an arbitrary delimiter
 
 ```
